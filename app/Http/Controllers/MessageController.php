@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\MessageAction;
 use App\Http\Requests\Message\StoreMessage;
+use App\Http\Resources\MessageResource;
 use App\Traits\ApiResponse;
 
 class MessageController extends Controller
@@ -37,6 +38,6 @@ class MessageController extends Controller
         }
 
         // Sending success response if message is sent successfully
-        return $this->sendSuccess($message, __('Message sent successfully'));
+        return $this->sendSuccess( message: __('Message sent successfully'));
     }
 }

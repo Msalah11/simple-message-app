@@ -8,12 +8,12 @@ use Symfony\Component\HttpFoundation\Response;
 trait ApiResponse
 {
     /**
-     * @param $data
+     * @param array $data
      * @param string $message
      * @param int $status
      * @return JsonResponse
      */
-    public function sendSuccess($data, string $message = 'Data Fetched Successfully', int $status = Response::HTTP_OK): JsonResponse
+    public function sendSuccess(array $data = [], string $message = 'Data Fetched Successfully', int $status = Response::HTTP_OK): JsonResponse
     {
         $result = [
             'response' => $data,

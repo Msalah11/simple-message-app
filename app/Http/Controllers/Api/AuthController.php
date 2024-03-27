@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\AuthRequest;
+use App\Http\Resources\UserResource;
 use App\Traits\ApiResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,9 +19,9 @@ class AuthController extends Controller
         $credentials = $request->only('phone', 'password');
 
         // Attempting authentication with provided credentials
-        if (! $token = auth()->attempt($credentials)) {
+        if (! $token = auth('api')->attempt($credentials)) {
             // Sending error response if authentication fails
-            return $this->sendError('Unauthorized', Response::HTTP_UNAUTHORIZED);
+            return $this->sendError(__('Unauthorized access. Please provide valid credentials.'), Response::HTTP_UNAUTHORIZED);
         }
 
         // Sending success response with token if authentication succeeds
@@ -31,9 +32,12 @@ class AuthController extends Controller
     private function respondWithToken($token): array
     {
         return [
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60 // Calculating token expiration time
+            'token' => [
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => config('jwt.ttl') * 60
+            ],
+            'user' => new UserResource(auth('api')->user())
         ];
     }
 }
